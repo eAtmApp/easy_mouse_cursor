@@ -57,5 +57,8 @@
     <Image Include="cursor-png-1108.png">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="cursor.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>

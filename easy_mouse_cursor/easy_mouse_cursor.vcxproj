@@ -177,6 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="cursor-png-1108.png" />
+    <Image Include="cursor.bmp" />
     <Image Include="easy_mouse_cursor.ico" />
     <Image Include="F:\下载目录\cursor-png-1103.bmp" />
     <Image Include="small.ico" />
