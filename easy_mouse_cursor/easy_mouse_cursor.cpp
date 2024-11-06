@@ -39,26 +39,18 @@ public:
                 return 0;
             case WM_PAINT:
             {
-
-
-
-                /*
-                                PAINTSTRUCT ps;
-                                HDC hdc = BeginPaint(hwnd, &ps);
-                                FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
-                                EndPaint(hwnd, &ps);*/
+/*
+                PAINTSTRUCT ps;
+                HDC hdc = BeginPaint(hwnd, &ps);
+                FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
+                EndPaint(hwnd, &ps);*/
                 return 0;
             }
             case WM_DPICHANGED:
             {
                 UINT newDpi = LOWORD(wParam);
-                //std::string es;
-                //es = std::format("{}", newDpi);
-                //::MessageBoxA(hwnd, es.c_str(), nullptr, MB_OK);
-
                 WndMouse* pMouseWnd = (WndMouse*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
                 pMouseWnd->redraw();
-
                 return 0;
             }
             case WM_SETCURSOR: {
@@ -72,6 +64,7 @@ public:
 
                 ::OutputDebugStringA("显示了\n");
                 //break;
+                return TRUE;
             }
             default:
                 return DefWindowProc(hwnd, uMsg, wParam, lParam);
@@ -151,17 +144,16 @@ public:
 
         auto hInstance = ::GetModuleHandle(nullptr);
 
-        WNDCLASSA wc = {};
+        WNDCLASSA wc = {0};
         wc.lpfnWndProc = WindowProc;
         wc.hInstance = hInstance;
         wc.lpszClassName = CLASS_NAME;
-
         RegisterClass(&wc);
 
         //任务管理器的置顶
         //https://stackoverflow.com/questions/39246590/is-task-manager-a-special-kind-of-always-on-top-window-for-windows-10
 
-        DWORD dwExtStyle = WS_EX_TOPMOST | WS_EX_TOOLWINDOW ;
+        DWORD dwExtStyle = WS_EX_TOPMOST | WS_EX_TOOLWINDOW;
         dwExtStyle |= WS_EX_LAYERED | WS_EX_TRANSPARENT;     //穿透
 
         POINT pt = {0};
@@ -172,10 +164,6 @@ public:
 
         SetWindowLongPtr(_wnd, GWLP_USERDATA, (LONG)this);
 
-        //redraw();
-
-        //SetLayeredWindowAttributes(_wnd, RGB(0, 0, 0), 255, LWA_ALPHA);
-
         ShowWindow(_wnd, SW_SHOW);
         redraw();
 
@@ -184,10 +172,9 @@ public:
 
     void    move(POINT& pt)
     {
-        /*
-                // 获取图标信息
-                CURSORINFO ci = {sizeof(CURSORINFO)};
-                GetCursorInfo(&ci);*/
+        // 获取图标信息
+        //CURSORINFO ci = {sizeof(CURSORINFO)};
+        //GetCursorInfo(&ci);
 
         SetWindowPos(_wnd, nullptr, pt.x, pt.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
     }
@@ -223,9 +210,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_ int       nCmdShow)
 {
     HANDLE hMutex = CreateMutexA(NULL, TRUE, "Global\\easy_mouse_cursor");
-    
+
     if (GetLastError() == ERROR_ALREADY_EXISTS) {
-        ::MessageBoxA(GetDesktopWindow(), "The program is already running.","Error",MB_OK|MB_ICONERROR);
+        ::MessageBoxA(GetDesktopWindow(), "The program is already running.", "Error", MB_OK | MB_ICONERROR);
         return 1;
     }
 
